@@ -7,7 +7,9 @@
 
 // Base API domain - points to the backend server
 // Use environment variable in production, fallback to localhost for development
-export const DOMAIN = process.env.REACT_APP_API_URL || "http://localhost:5000";
+// Remove trailing slash to avoid double slashes in URLs
+const rawDomain = process.env.REACT_APP_API_URL || "http://localhost:5000";
+export const DOMAIN = rawDomain.replace(/\/+$/, ""); // Remove trailing slashes
 
 // All API endpoints grouped by functional modules
 export const ENDPOINTS = {
