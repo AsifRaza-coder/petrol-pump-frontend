@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Autofill styles for login form */
+@layer components {
+  .loginForm input:-webkit-autofill,
+  .loginForm input:-webkit-autofill:hover,
+  .loginForm input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px white inset !important;
+    -webkit-text-fill-color: #111827 !important;
+    transition: background-color 600000s 0s, color 600000s 0s;
+  }
+  
+  .loginForm input[data-autocompleted] {
+    background-color: white !important;
+  }
+  
+  .loginForm input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  }
+}
+
+/* PhoneInput styling for signup form */
+@layer components {
+  .phone-input-wrapper {
+    width: 100%;
+  }
+  
+  .phone-input-container {
+    width: 100% !important;
+    position: relative !important;
+  }
+  
+  /* Main input field styling */
+  .phone-input-wrapper .react-tel-input .form-control {
+    width: 100% !important;
+    height: 48px !important;
+    padding: 12px 16px !important;
+    padding-left: 52px !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 8px !important;
+    font-size: 16px !important;
+    background-color: white !important;
+    color: #111827 !important;
+    transition: all 0.2s !important;
+  }
+  
+  .phone-input-wrapper .react-tel-input .form-control:focus {
+    outline: none !important;
+    border-color: #1a4d4d !important;
+    box-shadow: 0 0 0 2px rgba(26, 77, 77, 0.1) !important;
+  }
+  
+  .phone-input-wrapper .react-tel-input .form-control:hover {
+    border-color: #9ca3af !important;
+  }
+  
+  /* Flag dropdown button styling */
+  .phone-input-wrapper .react-tel-input .flag-dropdown {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    border: 1px solid #d1d5db !important;
+    border-right: none !important;
+    border-radius: 8px 0 0 8px !important;
+    background-color: transparent !important;
+  }
+  
+  .phone-input-wrapper .react-tel-input .selected-flag {
+    background-color: transparent !important;
+    border-radius: 8px 0 0 8px !important;
+    padding: 12px 8px !important;
+    height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+  .phone-input-wrapper .react-tel-input .selected-flag:hover {
+    background-color: #f9fafb !important;
+  }
+  
+  .phone-input-wrapper .react-tel-input .selected-flag:focus {
+    background-color: #f9fafb !important;
+  }
+  
+  .phone-input-wrapper .react-tel-input .selected-flag .arrow {
+    border-top-color: #6b7280 !important;
+  }
+  
+  .phone-input-wrapper .react-tel-input .selected-flag.open .arrow {
+    border-bottom-color: #6b7280 !important;
+  }
+  
+  /* Dropdown menu styling */
+  .phone-input-wrapper .react-tel-input .flag-dropdown.open .selected-flag {
+    background-color: #f9fafb !important;
+  }
+  
+  .phone-input-wrapper .react-tel-input .country-list {
+    border: 1px solid #d1d5db !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+    margin-top: 4px !important;
+  }
+  
+  .phone-input-wrapper .react-tel-input .country-list .country:hover {
+    background-color: #f3f4f6 !important;
+  }
+  
+  .phone-input-wrapper .react-tel-input .country-list .country.highlight {
+    background-color: #e5e7eb !important;
+  }
+}
+
+/* Sidebar styles */
+@layer components {
+    /* Hide scrollbar for sidebar */
+    .scrollbar-hide {
+      -ms-overflow-style: none !important;  /* IE and Edge */
+      scrollbar-width: none !important;  /* Firefox */
+    }
+    
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none !important;  /* Chrome, Safari and Opera */
+    }
+    
+    /* Ensure all sidebar icons are white */
+    aside[aria-label="Sidebar"] .icon,
+    aside[aria-label="Sidebar"] svg {
+      color: white !important;
+      fill: white !important;
+    }
+    
+    /* SIMPLE SOLUTION: Force dropdown icons visible */
+    aside[aria-label="Sidebar"] button span[class*="ml-auto"] svg,
+    aside[aria-label="Sidebar"] span[class*="ml-auto"] svg {
+      display: inline-block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      width: 16px !important;
+      height: 16px !important;
+    }
+    
+    aside[aria-label="Sidebar"] button span[class*="ml-auto"] svg path,
+    aside[aria-label="Sidebar"] span[class*="ml-auto"] svg path {
+      stroke: white !important;
+      stroke-width: 2.5 !important;
+      fill: none !important;
+      display: block !important;
+    }
+  }
+
