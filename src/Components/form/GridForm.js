@@ -11,6 +11,7 @@ import {
   FormLabel,
   Box,
   Autocomplete,
+  Paper,
 } from "@mui/material";
 import React from "react";
 import FileInput from "./FileInput";
@@ -243,6 +244,52 @@ export default function Form({
                       value: newValue ? newValue.value : "",
                     },
                   });
+                }}
+                ListboxProps={{
+                  style: {
+                    maxHeight: 300,
+                    overflow: 'auto',
+                    scrollbarWidth: 'none', // Firefox
+                    msOverflowStyle: 'none', // IE and Edge
+                  }
+                }}
+                componentsProps={{
+                  popper: {
+                    modifiers: [
+                      {
+                        name: 'offset',
+                        options: {
+                          offset: [0, 4],
+                        },
+                      },
+                    ],
+                  },
+                  paper: {
+                    style: {
+                      maxHeight: 300,
+                      overflow: 'auto',
+                      scrollbarWidth: 'none', // Firefox
+                      msOverflowStyle: 'none', // IE and Edge
+                    },
+                    sx: {
+                      '&::-webkit-scrollbar': {
+                        display: 'none', // Chrome, Safari, Opera
+                      },
+                    }
+                  }
+                }}
+                slotProps={{
+                  popper: {
+                    sx: {
+                      '& .MuiAutocomplete-listbox': {
+                        '&::-webkit-scrollbar': {
+                          display: 'none', // Chrome, Safari, Opera
+                        },
+                        scrollbarWidth: 'none', // Firefox
+                        msOverflowStyle: 'none', // IE and Edge
+                      }
+                    }
+                  }
                 }}
                 renderInput={(params) => {
                   const selectedItem = Array.isArray(input.options) 

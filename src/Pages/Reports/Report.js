@@ -167,14 +167,14 @@ export default function Report() {
   const renderGroup = (group) => {
     let groupTotalQty = 0;
     let groupTotalAmt = 0;
-    // let groupTestEntry = 0; // Commented: unused variable
+    let groupTestEntry = 0;
     let totalProfit = 0;
 
     const rows = Object.entries(group)?.flatMap(([productName, items]) =>
       items.map((item, index) => {
         groupTotalQty += roundValue(item.quantity);
         groupTotalAmt += roundValue(item.amount);
-        // groupTestEntry += roundValue(item.testEntry); // Commented: unused variable
+        groupTestEntry += roundValue(item.testEntry);
 
         totalProfit += roundValue(
           roundValue(

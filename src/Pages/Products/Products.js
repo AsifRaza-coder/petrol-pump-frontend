@@ -18,6 +18,7 @@ import { productColumns } from "../../Components/datatable/productTableSources";
 import {searchEmployeeInput } from "../../Components/sources/employeesFormSources";
 import { productInputFields, searchProductFilters } from "../../Components/sources/productsFormSources";
 import { addProduct, clearCurrentProduct, clearProducts, deleteProduct, getProducts, getSingleProduct, updateProduct } from "../../redux/productSlice/productSlice";
+import { getAllProducts } from "../../redux/completeDataSlice/completeDataSlice";
 import ProductDetails from "./ProductDetails";
 import { DOMAIN } from "../../backend/API";
 
@@ -353,7 +354,12 @@ const handleOnSubmit = async (e) => {
             };
 
             //Hit API Call using dispatch to updated product
-            dispatch(updateProduct(data));
+            dispatch(updateProduct(data)).then((result) => {
+              // Refresh products in completeDataSlice for Customer Credit dropdown after update
+              if (result.payload?.success === true) {
+                dispatch(getAllProducts());
+              }
+            });
           } else {
             //Hit API Call using dispatch to add Product
             dispatch(addProduct(newState)).then((result) => {
@@ -361,6 +367,8 @@ const handleOnSubmit = async (e) => {
               if (result.payload?.success === true) {
                 const initialData = { page: 0, sort: filters.sort };
                 dispatch(getProducts(initialData));
+                // Also refresh products in completeDataSlice for Customer Credit dropdown
+                dispatch(getAllProducts());
               }
             });
           }
@@ -378,8 +386,13 @@ const handleOnSubmit = async (e) => {
             id: selectedRowId[0],
             Data: state,
           };
-          //Hit API Call using dispatch to updated employee
-          dispatch(updateProduct(data));
+          //Hit API Call using dispatch to updated product
+          dispatch(updateProduct(data)).then((result) => {
+            // Refresh products in completeDataSlice for Customer Credit dropdown after update
+            if (result.payload?.success === true) {
+              dispatch(getAllProducts());
+            }
+          });
         } else {
           //Hit API Call using dispatch to add Product
           dispatch(addProduct(state)).then((result) => {
@@ -387,6 +400,8 @@ const handleOnSubmit = async (e) => {
             if (result.payload?.success === true) {
               const initialData = { page: 0, sort: filters.sort };
               dispatch(getProducts(initialData));
+              // Also refresh products in completeDataSlice for Customer Credit dropdown
+              dispatch(getAllProducts());
             }
           });
         }

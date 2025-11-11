@@ -229,6 +229,13 @@ const AddShift = () => {
     // eslint-disable-next-line
   }, []);
 
+  //Refresh products when Customer Credit dialog opens to ensure latest products are shown
+  useEffect(() => {
+    if (customerCreditDialog) {
+      dispatch(getAllProducts());
+    }
+  }, [customerCreditDialog, dispatch]);
+
   useEffect(() => {
     if (!readings || readings.length === 0) return;
 

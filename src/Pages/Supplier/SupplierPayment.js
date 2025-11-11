@@ -141,7 +141,6 @@ const SupplierPayment = () => {
     } else {
       handleOnFormDialogClose();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submitErrors]);
 
   //Handle Delete Tenant func

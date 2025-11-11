@@ -271,14 +271,14 @@ const Stock = () => {
     }
   };
   // Function for Capitalizing the data
-  // function capitalizeEachWord(sentence) { // Commented: unused function
-  //   return sentence
-  //     .split(" ")
-  //     .map((word) => {
-  //       return word.charAt(0).toUpperCase() + word.slice(1);
-  //     })
-  //     .join(" ");
-  // }
+  function capitalizeEachWord(sentence) {
+    return sentence
+      .split(" ")
+      .map((word) => {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      })
+      .join(" ");
+  }
   //Iterate and capitalizing data of each row
   const capitalizedRows = stocks.map((row) => ({
     ...row,

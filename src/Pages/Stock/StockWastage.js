@@ -14,10 +14,9 @@ import {
 import Search from "../../Components/search/Search";
 import { toast } from "react-toastify";
 import DetailsDialog from "../../Components/dialogue/DetailsDialogue";
-// import {updateEmployee } from "../../redux/employeeSlice/employeeSlice"; // Commented: unused import
-import { searchEmployeeInput } from "../../Components/sources/employeesFormSources";
-// import { searchEmployeeFilters } from "../../Components/sources/employeesFormSources"; // Commented: unused import
-// import {  getProducts, getSingleProduct } from "../../redux/productSlice/productSlice"; // Commented: unused import
+import {updateEmployee } from "../../redux/employeeSlice/employeeSlice";
+import { searchEmployeeFilters, searchEmployeeInput } from "../../Components/sources/employeesFormSources";
+import {  getProducts, getSingleProduct } from "../../redux/productSlice/productSlice";
 import { wastageColumns } from "../../Components/datatable/wastageTableSources";
 import { addWastage, clearWastages, deleteWastage, getSingleWastage, getWastages, updateWastage } from "../../redux/wastageSlice/wastageSlice";
 import { searchWastageFilters, wastageInputFields } from "../../Components/sources/wastagesFormSources";

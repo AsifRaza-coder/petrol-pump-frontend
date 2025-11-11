@@ -16,7 +16,7 @@ import { toast } from "react-toastify";
 import DetailsDialog from "../../Components/dialogue/DetailsDialogue";
 
 import { searchEmployeeInput } from "../../Components/sources/employeesFormSources";
-// import {  getProducts } from "../../redux/productSlice/productSlice"; // Commented: unused import
+import {  getProducts } from "../../redux/productSlice/productSlice";
 
 
 import { searchWastageFilters} from "../../Components/sources/wastagesFormSources";
@@ -132,7 +132,6 @@ useEffect(() => {
   } else {
     handleOnFormDialogClose();
   }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [submitErrors]);
 
 //Handle Delete Product func
@@ -307,8 +306,7 @@ const handleOnSubmit = async (e) => {
     stockDiff: row.prevDip && row.dip && (row.product.name.toLowerCase() === "petrol" ? (calculateLitres(row.dip, petrolDipChart) - calculateLitres(row.prevDip, petrolDipChart)) : (calculateLitres(row.dip, dieselDipChart) - calculateLitres(row.prevDip, dieselDipChart)))
     }));
   //Destructure values from the state
-  const { productId, dip,  date} = state;
-  // const { userId, productId, dip,  date} = state; // userId commented: unused variable
+  const { userId, productId, dip,  date} = state;
   //Handle on submit function
   const handleOnAddUpdateFormSubmit = async (e) => {
     e.preventDefault();

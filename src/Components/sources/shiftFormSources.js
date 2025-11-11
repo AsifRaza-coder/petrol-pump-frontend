@@ -339,17 +339,14 @@ export const activeCustomerCreditInputFields = (
     options:
       products && products.length > 0
         ? products
-            .filter((item) => {
-              // Filter out petrol and diesel - these are for machines, not customer credit
-              const type = item.type?.toLowerCase();
-              return type !== "petrol" && type !== "diesel";
-            })
             .map((item) => ({
               id: item._id,
               name: item.name,
               value: item._id,
             }))
         : [],
+    // Debug: Log products count
+    // console.log('Customer Credit Products:', products?.length, products),
     grid: {
       xs: 12,
       sm: 12,
