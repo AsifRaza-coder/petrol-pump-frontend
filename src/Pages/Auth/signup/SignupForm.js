@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import AuthContext from "../../../context/auth/AuthContext";
 import PhoneInput from 'react-phone-input-2'
-import 'react-phone-input-2/lib/style.css'
 import { toast } from "react-toastify";
 
 //This is a makeStyles function used for making custom styles

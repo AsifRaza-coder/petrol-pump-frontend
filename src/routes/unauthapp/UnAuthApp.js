@@ -3,7 +3,6 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Login from "../../Pages/Auth/login/Login";
 import Signup from "../../Pages/Auth/signup/Signup";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import Alert from "../../Components/alert/Alert";
 const UnAuthApp = ({ mode }) => {
   return (

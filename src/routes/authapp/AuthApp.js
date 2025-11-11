@@ -8,7 +8,6 @@ import {
 import Navbar from "../../Components/navbar/Navbar";
 import Sidebar from "../../Components/sidebar/Sidebar";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import Alert from "../../Components/alert/Alert";
 import AuthContext from "../../context/auth/AuthContext";
 import Loader from "./Loader";

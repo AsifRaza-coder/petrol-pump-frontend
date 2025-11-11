@@ -11,7 +11,6 @@ import {
   FormLabel,
   Box,
   Autocomplete,
-  Paper,
 } from "@mui/material";
 import React from "react";
 import FileInput from "./FileInput";

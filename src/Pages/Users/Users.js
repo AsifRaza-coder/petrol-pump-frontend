@@ -151,6 +151,29 @@ const Users = () => {
     // eslint-disable-next-line
   }, [filters.field]);
 
+  const handleOnFormDialogClose = useCallback(() => {
+    //Close Form Dialog
+    setOpenFormDialog(false);
+    //Clear selected Row Id
+    setSelectedRowId(null);
+    //Clear State and remove previous data
+    setState({
+      name: "",
+      email: "",
+      contact: "",
+      username: "",
+      access: "",
+      address: "",
+      status: "",
+      password: "",
+      confirmPassword: "",
+    });
+    //Clear File loaded in file state
+    setFile("");
+
+    dispatch(clearCurrentUser());
+  }, [dispatch]);
+
   //useEffect to Iterate submit Errors
   useEffect(() => {
     if (!submitErrors) return;
@@ -234,30 +257,6 @@ const Users = () => {
       }
     }
   };
-
-  //Handle On Form Dialog Close
-  const handleOnFormDialogClose = useCallback(() => {
-    //Close Form Dialog
-    setOpenFormDialog(false);
-    //Clear selected Row Id
-    setSelectedRowId(null);
-    //Clear State and remove previous data
-    setState({
-      name: "",
-      email: "",
-      contact: "",
-      username: "",
-      access: "",
-      address: "",
-      status: "",
-      password: "",
-      confirmPassword: "",
-    });
-    //Clear File loaded in file state
-    setFile("");
-
-    dispatch(clearCurrentUser());
-  }, [dispatch]);
 
   //Handle on Page Change
   const handleOnPageChange = (e) => {
