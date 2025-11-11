@@ -1,5 +1,5 @@
 import { Box, Typography, Paper } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Header from "../../Components/Header/Header";
 import DataTable from "../../Components/datatable/DataTable";
 import {
@@ -137,7 +137,7 @@ const Users = () => {
   useEffect(() => {
     const initialData = { page: 0, sort: filters.sort };
     dispatch(getAllUsers(initialData));
-  }, []);
+  }, [dispatch, filters.sort]);
 
   //useEffect to handle the dates filter
   useEffect(() => {
@@ -153,7 +153,8 @@ const Users = () => {
 
   //useEffect to Iterate submit Errors
   useEffect(() => {
-    if (submitErrors?.length > 0) {
+    if (!submitErrors) return;
+    if (submitErrors.length > 0) {
       //iterate submit errors
       submitErrors.forEach((item) => {
         toast(item.msg, { position: "top-right", type: "error" });
@@ -161,7 +162,7 @@ const Users = () => {
     } else {
       handleOnFormDialogClose();
     }
-  }, [submitErrors]);
+  }, [submitErrors, handleOnFormDialogClose]);
 
   //Handle Delete Tenant func
   const handleOnDelete = () => {
@@ -235,7 +236,7 @@ const Users = () => {
   };
 
   //Handle On Form Dialog Close
-  const handleOnFormDialogClose = () => {
+  const handleOnFormDialogClose = useCallback(() => {
     //Close Form Dialog
     setOpenFormDialog(false);
     //Clear selected Row Id
@@ -256,7 +257,7 @@ const Users = () => {
     setFile("");
 
     dispatch(clearCurrentUser());
-  };
+  }, [dispatch]);
 
   //Handle on Page Change
   const handleOnPageChange = (e) => {
