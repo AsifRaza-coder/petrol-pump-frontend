@@ -113,7 +113,7 @@ const AuthApp = ({ mode }) => {
                 <Route path="*" element={<Navigate to="/pagenotfound" replace />} />
               </Routes>
             </Suspense>
-          </div>
+          </div>    
         </div>
       </BrowserRouter>
     </div>

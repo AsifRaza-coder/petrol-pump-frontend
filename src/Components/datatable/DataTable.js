@@ -14,6 +14,38 @@ return (
         disableColumnFilter
         rowCount={totalRecords}
         paginationMode="server"
+        sx={{
+          "& .MuiDataGrid-cell:focus": {
+            outline: "none !important",
+            borderBottom: "1px solid #e5e7eb !important",
+          },
+          "& .MuiDataGrid-cell:focus-visible": {
+            outline: "none !important",
+            borderBottom: "1px solid #e5e7eb !important",
+          },
+          "& .MuiDataGrid-cell:focus-within": {
+            outline: "none !important",
+            borderBottom: "1px solid #e5e7eb !important",
+          },
+          "& .MuiDataGrid-row:focus": {
+            outline: "none !important",
+            borderBottom: "1px solid #e5e7eb !important",
+          },
+          "& .MuiDataGrid-row:focus-visible": {
+            outline: "none !important",
+            borderBottom: "1px solid #e5e7eb !important",
+          },
+          "& .MuiDataGrid-row:focus-within": {
+            outline: "none !important",
+            borderBottom: "1px solid #e5e7eb !important",
+          },
+          "& .MuiDataGrid-columnHeader:focus": {
+            outline: "none !important",
+          },
+          "& .MuiDataGrid-columnHeader:focus-visible": {
+            outline: "none !important",
+          },
+        }}
         components={{
             NoRowsOverlay: () => (
               <Stack height="100%" alignItems="center" justifyContent="center">
@@ -23,8 +55,8 @@ return (
             Pagination: footer ? () => null  : undefined , // Hides the pagination component
           }}
         page={currentPage}
-        onSelectionModelChange={item => setSelectedRowId(item)}
-        selectionModel={selectedRowId ? [selectedRowId] : []}
+        onSelectionModelChange={(item) => setSelectedRowId(item)}
+        selectionModel={selectedRowId || []}
         onPageChange={(e)=> {handleOnPageChange(e)}}
         rowsPerPageOptions={[5]}
         checkboxSelection={false} // Enable checkbox selection

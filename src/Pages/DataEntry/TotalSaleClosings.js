@@ -1,4 +1,3 @@
-import { Box } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import Header from "../../Components/Header/Header";
 import DataTable from "../../Components/datatable/DataTable";
@@ -15,7 +14,6 @@ import { searchInput } from "../../Components/sources/formSources";
 import {
   // clearSales,
   // deleteSale,
-  getSales,
   getSingleSale,
 } from "../../redux/saleSlice/saleSlice";
 import SaleDetails from "../Customer/SaleDetails";
@@ -28,6 +26,7 @@ import {
   getSaleClosings,
 } from "../../redux/closingsSlice/closingsSlice";
 import AuthContext from "../../context/auth/AuthContext";
+import { DOMAIN } from "../../backend/API";
 
 const TotalSaleClosings = () => {
   //Initializing dispatch function to call redux functions
@@ -152,15 +151,73 @@ const TotalSaleClosings = () => {
   };
 
   //Handle Print Sale func
-  const handlePrint = (id) => {
-    dispatch(getPrintClosingReport(id));
-    console.log("Check print id => ", id);
+  const handlePrint = async (id) => {
+    const printWindow = window.open("", "_blank");
+
+    if (!printWindow) {
+      toast("Please allow pop-ups to view the report.", {
+        position: "top-right",
+        type: "warning",
+      });
+      return;
+    }
+
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Generating Report...</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              height: 100vh;
+              margin: 0;
+              background: linear-gradient(135deg, #f0f4ff, #e0ecff);
+              color: #1f2937;
+            }
+            .message {
+              text-align: center;
+            }
+            h1 {
+              font-size: 22px;
+              margin-bottom: 12px;
+            }
+            p {
+              margin: 0;
+              font-size: 14px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="message">
+            <h1>Generating report...</h1>
+            <p>Please wait while we prepare your closing report.</p>
+          </div>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+
+    try {
+      const response = await dispatch(getPrintClosingReport(id)).unwrap();
+      if (response?.success && response?.url) {
+        printWindow.location.href = `${DOMAIN}${response.url}`;
+      } else {
+        printWindow.document.body.innerHTML =
+          "<p style='font-family: Arial, sans-serif; text-align: center;'>Unable to generate report. Please try again later.</p>";
+      }
+    } catch (error) {
+      printWindow.document.body.innerHTML =
+        "<p style='font-family: Arial, sans-serif; text-align: center; color: #dc2626;'>An error occurred while generating the report.</p>";
+    }
   };
   //Load The Data
   const loadData = () => {
     const initialData = { page: 0, sort: -1 };
-    //Call getMachines using dispatch
-    dispatch(getSales(initialData));
+    //Call getSaleClosings using dispatch
+    dispatch(getSaleClosings(initialData));
   };
   //Handle On submit
   const handleOnSubmit = async (e) => {
@@ -184,7 +241,7 @@ const TotalSaleClosings = () => {
         toast("Please Select Date", { position: "top-right", type: "error" });
       } else {
         //Calling dispatch function to hit API Call
-        dispatch(getSales(newState));
+        dispatch(getSaleClosings(newState));
         //After search results close the filters panel
         setOpenFiltersPanel(!openFiltersPanel);
         //Set Page to Zero
@@ -192,7 +249,7 @@ const TotalSaleClosings = () => {
       }
     } else if (field === "") {
       //Calling dispatch function to hit API Call
-      dispatch(getSales(newState));
+      dispatch(getSaleClosings(newState));
       //After search results close the filters panel
       setOpenFiltersPanel(!openFiltersPanel);
       //Set Page to Zero
@@ -210,7 +267,7 @@ const TotalSaleClosings = () => {
         });
       } else {
         //Calling dispatch function to hit API Call
-        dispatch(getSales(newState));
+        dispatch(getSaleClosings(newState));
         //After search results close the filters panel
         setOpenFiltersPanel(!openFiltersPanel);
         //Set Page to Zero
@@ -243,10 +300,10 @@ const TotalSaleClosings = () => {
         toast("Please Select Date", { position: "top-right", type: "error" });
       } else {
         //Calling dispatch function to hit API Call
-        dispatch(getSales(newState));
+        dispatch(getSaleClosings(newState));
       }
     } else if (field === "") {
-      dispatch(getSales(newState));
+      dispatch(getSaleClosings(newState));
     } else {
       if (field !== "" && searchInput === "") {
         toast("Please Enter to search..", {
@@ -255,7 +312,7 @@ const TotalSaleClosings = () => {
         });
       } else {
         //Calling dispatch function to hit API Call
-        dispatch(getSales(newState));
+        dispatch(getSaleClosings(newState));
       }
     }
   };
@@ -299,71 +356,90 @@ const TotalSaleClosings = () => {
   };
 
   return (
-    <Box m="0px 20px 15px 20px">
-      {/* Header for Closings Page  */}
-      <Header
-        icon={<PendingActions style={{ marginRight: "10px" }} />}
-        title="Shift Closings"
-        subTitle="Manage Application Sale Closings"
-      />
-      {/* Main Card for setup shift closing Table */}
-      <Box className="mainCard">
-        {/* Add OR Update Shift Dialog Box  */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 md:p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header Section with Enhanced Styling */}
+        <div className="mb-6">
+          <div className="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+            <div className="flex items-center gap-4">
+              <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-3 rounded-lg shadow-md">
+                <PendingActions sx={{ fontSize: 28, color: "white" }} />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-800 mb-1">
+                  Shift Closings
+                </h1>
+                <p className="text-gray-600 text-sm font-medium">
+                  Manage Application Sale Closings
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        {/* Employee Details Dialog box  */}
-        <SaleDetails
-          openDetailsDialog={openDetailsDialog}
-          heading={
-            Object.keys(currentData).length !== 0
-              ? `Sales Detail of ${currentData.customer.name}`
-              : "Sale Details"
-          }
-          inputs={Object.keys(currentData).length !== 0 && currentData}
-          icon={<Assessment style={{ marginRight: "10px" }} />}
-          handleOnCloseDetails={handleOnCloseDetails}
-        />
-        {/* Delete Content Dialog box  */}
-        <Dialogue
-          openDeleteDialog={openDeleteDialog}
-          setOpenDeleteDialog={setOpenDeleteDialog}
-          handleOnDelete={handleOnDelete}
-          heading={"DELETE SALE"}
-          color="#ff0000"
-          icon={<DangerousIcon style={{ marginRight: "10px" }} />}
-          message={"Are sure you want to delete Sale?."}
-        />
+        {/* Main Card with Modern Design */}
+        <div className="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-200">
+          {/* Employee Details Dialog box  */}
+          <SaleDetails
+            openDetailsDialog={openDetailsDialog}
+            heading={
+              Object.keys(currentData).length !== 0
+                ? `Sales Detail of ${currentData.customer.name}`
+                : "Sale Details"
+            }
+            inputs={Object.keys(currentData).length !== 0 && currentData}
+            icon={<Assessment style={{ marginRight: "10px" }} />}
+            handleOnCloseDetails={handleOnCloseDetails}
+          />
+          
+          {/* Delete Content Dialog box  */}
+          <Dialogue
+            openDeleteDialog={openDeleteDialog}
+            setOpenDeleteDialog={setOpenDeleteDialog}
+            handleOnDelete={handleOnDelete}
+            heading={"DELETE SALE"}
+            color="#ff0000"
+            icon={<DangerousIcon style={{ marginRight: "10px" }} />}
+            message={"Are sure you want to delete Sale?."}
+          />
 
-        {/* Here we calling Search component in which we 
-        are passing Filters state and Input Values state  */}
-        <Search
-          submit={handleOnSubmit}
-          filters={filters}
-          setFilter={setFilter}
-          state={search}
-          setState={setSearch}
-          openFiltersPanel={openFiltersPanel}
-          setOpenFiltersPanel={setOpenFiltersPanel}
-          loadDataFunc={loadData}
-          searchFiltersForm={searchSalesFilters}
-          searchInputForm={searchInput}
-        />
-        {/* DataTable for Employees  */}
-        <DataTable
-          columns={salesClosingsColumns(
-            setOpenDeleteDialog,
-            setDetailsDialog,
-            handlePrint,
-            user
-          )}
-          rows={capitalizedRows}
-          currentPage={currentPage}
-          totalRecords={totalRecords}
-          selectedRowId={selectedRowId}
-          setSelectedRowId={setSelectedRowId}
-          handleOnPageChange={handleOnPageChange}
-        />
-      </Box>
-    </Box>
+          {/* Search Component */}
+          <div className="px-6 pt-6 pb-4 bg-gradient-to-r from-gray-50 to-white border-b border-gray-200">
+            <Search
+              submit={handleOnSubmit}
+              filters={filters}
+              setFilter={setFilter}
+              state={search}
+              setState={setSearch}
+              openFiltersPanel={openFiltersPanel}
+              setOpenFiltersPanel={setOpenFiltersPanel}
+              loadDataFunc={loadData}
+              searchFiltersForm={searchSalesFilters}
+              searchInputForm={searchInput}
+            />
+          </div>
+
+          {/* DataTable with Enhanced Styling */}
+          <div className="p-6">
+            <DataTable
+              columns={salesClosingsColumns(
+                setOpenDeleteDialog,
+                setDetailsDialog,
+                handlePrint,
+                user,
+                setSelectedRowId
+              )}
+              rows={capitalizedRows}
+              currentPage={currentPage}
+              totalRecords={totalRecords}
+              selectedRowId={selectedRowId}
+              setSelectedRowId={setSelectedRowId}
+              handleOnPageChange={handleOnPageChange}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

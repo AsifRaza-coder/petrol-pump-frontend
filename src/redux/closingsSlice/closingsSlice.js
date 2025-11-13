@@ -143,6 +143,7 @@ export const closingSlice = createSlice({
     errors: [],
     closed: false,
     totalRecord: 0,
+    printUrl: null,
   },
   reducers: {
     clearClosings() {
@@ -152,6 +153,7 @@ export const closingSlice = createSlice({
         closed: false,
         totalRecord: 0,
         errors: [],
+        printUrl: null,
       };
     },
   },
@@ -218,26 +220,10 @@ export const closingSlice = createSlice({
     //@used For     GET Print Report
     //@Response     Date Stored in State current
     builder.addCase(getPrintClosingReport.fulfilled, (state, action) => {
-      //Checking for success
-      if (action.payload.success === true) {
-        const url = action.payload.url;
-
-        console.log("Check th pdf url => ", url)
-
-        // Normalize backslashes and use RegExp to find exact /backend/ folder
-    
-
-        
-
-        // const fullUrl = DOMAIN + relativePath;
-        const fullUrl = DOMAIN + url;
-
-
-        // Open the new PDF in a new tab
-        window.open(fullUrl, "_blank");
-
-        // Optionally, revoke the object URL after use (for memory cleanup)
-      // window.URL.revokeObjectURL(fullUrl);
+      if (action.payload?.success === true) {
+        state.printUrl = action.payload.url;
+      } else {
+        state.printUrl = null;
       }
     });
     //@CaseNo       02

@@ -2179,13 +2179,14 @@ const AddShift = () => {
               xs={12}
               style={{ paddingRight: 10 }}
             >
-              <div className="summaryBody">
+              <div className="summaryBody flex justify-between ">
                 <div className="fieldName">
                   <p>Petrol:</p>
                   <p>Diesel:</p>
                   <p>Lubricant:</p>
                 </div>
-                <div className="fieldValue">
+
+                <div className="fieldValue ">
                   <p>
                     {totals?.petrolTotalAmount?.toLocaleString("en-US", {
                       style: "currency",
@@ -2212,7 +2213,9 @@ const AddShift = () => {
                   </p>
                 </div>
               </div>
+
               <hr />
+
               <div
                 style={{
                   display: "flex",
@@ -2232,7 +2235,8 @@ const AddShift = () => {
                   })}
                 </Typography>
               </div>
-              <div className="summaryBody">
+
+              <div className="summaryBody flex justify-between ">
                 <div className="fieldName">
                   <p>Customer Debit:</p>
                   <p>Staff Debit:</p>
@@ -2294,7 +2298,7 @@ const AddShift = () => {
                 }
               }}
             >
-              <div className="summaryBody">
+              <div className="summaryBody flex justify-between">
                 <div className="fieldName">
                   <p>Customer Credit:</p>
                   <p>Customer Advance:</p>
@@ -2335,10 +2339,10 @@ const AddShift = () => {
                   backgroundColor: "#faebc9",
                 }}
               >
-                <Typography style={{ fontWeight: "bold", paddingLeft: 5 }}>
+                <Typography style={{ fontWeight: "bold", paddingLeft: 1 }}>
                   Total Credit:
                 </Typography>
-                <Typography style={{ fontWeight: "bold", paddingRight: 5 }}>
+                <Typography style={{ fontWeight: "bold", paddingRight: 1 }}>
                   {totals?.totalCredit?.toLocaleString("en-US", {
                     style: "currency",
                     currency: "PKR",
@@ -2347,7 +2351,7 @@ const AddShift = () => {
                   })}
                 </Typography>
               </div>
-              <div className="summaryBody">
+              <div className="summaryBody flex justify-between">
                 <div className="fieldName">
                   <p>Bank Amount:</p>
                 </div>
@@ -2364,14 +2368,14 @@ const AddShift = () => {
               </div>
               <hr style={{ fontWeight: "800" }} />
               <div
-                className="summaryBody"
+                className="summaryBody flex justify-between"
                 style={{ backgroundColor: "#ffe0dc" }}
               >
                 <div className="fieldName">
-                  <p style={{ fontWeight: "bold", paddingLeft: 5 }}>Expense:</p>
+                  <p style={{ fontWeight: "bold", paddingLeft: 1 }}>Expense:</p>
                 </div>
-                <div className="fieldValue">
-                  <p style={{ fontWeight: "bold", paddingRight: 5 }}>
+                <div className="fieldValue font-bold">
+                  <p style={{ fontWeight: "bold", paddingRight: 1 }}>
                     {totals?.totalExpenses?.toLocaleString("en-US", {
                       style: "currency",
                       currency: "PKR",
@@ -2386,7 +2390,7 @@ const AddShift = () => {
 
           <Box style={{ marginTop: 20 }}>
             <div
-              className="summaryBody"
+              className="summaryBody flex justify-between"
               style={{ backgroundColor: "#daeade", padding: 5 }}
             >
               <div className="fieldName">
