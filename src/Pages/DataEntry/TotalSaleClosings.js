@@ -202,10 +202,17 @@ const TotalSaleClosings = () => {
 
     try {
       const response = await dispatch(getPrintClosingReport(id)).unwrap();
+      console.log("Print response:", response);
+      
       if (response?.success && response?.url) {
         printWindow.location.href = `${DOMAIN}${response.url}`;
       } else {
-        const errorMsg = response?.errors?.[0]?.msg || response?.msg || "Unable to generate report. Please try again later.";
+        // Handle error response
+        const errorMsg = 
+          (response?.errors && Array.isArray(response.errors) && response.errors[0]?.msg) ||
+          response?.msg || 
+          "Unable to generate report. Please try again later.";
+        
         printWindow.document.body.innerHTML = `
           <div style='font-family: Arial, sans-serif; text-align: center; padding: 20px;'>
             <p style='color: #dc2626; font-size: 16px; margin-bottom: 10px;'>Unable to generate report</p>
@@ -216,7 +223,24 @@ const TotalSaleClosings = () => {
       }
     } catch (error) {
       console.error("Print error:", error);
-      const errorMsg = error?.message || error?.errors?.[0]?.msg || "An error occurred while generating the report.";
+      console.error("Error details:", error);
+      
+      // Safely extract error message
+      let errorMsg = "An error occurred while generating the report.";
+      
+      if (error?.response?.data) {
+        const errorData = error.response.data;
+        if (errorData.errors && Array.isArray(errorData.errors) && errorData.errors[0]?.msg) {
+          errorMsg = errorData.errors[0].msg;
+        } else if (errorData.msg) {
+          errorMsg = errorData.msg;
+        } else if (errorData.error && Array.isArray(errorData.error) && errorData.error[0]?.msg) {
+          errorMsg = errorData.error[0].msg;
+        }
+      } else if (error?.message) {
+        errorMsg = error.message;
+      }
+      
       printWindow.document.body.innerHTML = `
         <div style='font-family: Arial, sans-serif; text-align: center; padding: 20px;'>
           <p style='color: #dc2626; font-size: 16px; margin-bottom: 10px;'>Error generating report</p>

@@ -77,8 +77,15 @@ export const getPrintClosingReport = createAsyncThunk(
         .get(`${ENDPOINTS.PRINTCLOSE}/${id}`)
         .then((res) => res.data);
     } catch (error) {
-      //In case of error
-      return error.response.data.error[0];
+      //In case of error - return proper error structure
+      if (error.response?.data) {
+        return error.response.data;
+      }
+      // If no response data, return error structure
+      return {
+        success: false,
+        errors: [{ msg: error.message || "Network error occurred", success: false }],
+      };
     }
   }
 );
