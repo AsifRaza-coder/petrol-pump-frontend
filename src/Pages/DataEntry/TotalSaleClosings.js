@@ -205,12 +205,26 @@ const TotalSaleClosings = () => {
       if (response?.success && response?.url) {
         printWindow.location.href = `${DOMAIN}${response.url}`;
       } else {
-        printWindow.document.body.innerHTML =
-          "<p style='font-family: Arial, sans-serif; text-align: center;'>Unable to generate report. Please try again later.</p>";
+        const errorMsg = response?.errors?.[0]?.msg || response?.msg || "Unable to generate report. Please try again later.";
+        printWindow.document.body.innerHTML = `
+          <div style='font-family: Arial, sans-serif; text-align: center; padding: 20px;'>
+            <p style='color: #dc2626; font-size: 16px; margin-bottom: 10px;'>Unable to generate report</p>
+            <p style='color: #666; font-size: 14px;'>${errorMsg}</p>
+          </div>
+        `;
+        toast(errorMsg, { position: "top-right", type: "error" });
       }
     } catch (error) {
-      printWindow.document.body.innerHTML =
-        "<p style='font-family: Arial, sans-serif; text-align: center; color: #dc2626;'>An error occurred while generating the report.</p>";
+      console.error("Print error:", error);
+      const errorMsg = error?.message || error?.errors?.[0]?.msg || "An error occurred while generating the report.";
+      printWindow.document.body.innerHTML = `
+        <div style='font-family: Arial, sans-serif; text-align: center; padding: 20px;'>
+          <p style='color: #dc2626; font-size: 16px; margin-bottom: 10px;'>Error generating report</p>
+          <p style='color: #666; font-size: 14px;'>${errorMsg}</p>
+          <p style='color: #999; font-size: 12px; margin-top: 20px;'>Please check your connection and try again.</p>
+        </div>
+      `;
+      toast(errorMsg, { position: "top-right", type: "error" });
     }
   };
   //Load The Data
