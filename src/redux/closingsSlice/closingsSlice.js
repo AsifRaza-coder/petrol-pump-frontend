@@ -73,30 +73,18 @@ export const getPrintClosingReport = createAsyncThunk(
     try {
       console.log(id);
       //Creating API Call using base url (/api/printClosing/:id)
-      // 30 seconds timeout for PDF generation
       return await axios
-        .get(`${ENDPOINTS.PRINTCLOSE}/${id}`, {
-          timeout: 30000, // 30 seconds timeout
-        })
+        .get(`${ENDPOINTS.PRINTCLOSE}/${id}`)
         .then((res) => res.data);
     } catch (error) {
       //In case of error - return proper error structure
       if (error.response?.data) {
         return error.response.data;
       }
-      
-      // Handle timeout specifically
-      if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
-        return {
-          success: false,
-          errors: [{ msg: "Request timed out. The report is taking longer than expected. Please try again.", success: false }],
-        };
-      }
-      
       // If no response data, return error structure
       return {
         success: false,
-        errors: [{ msg: error.message || "Network error occurred. Please check your connection and try again.", success: false }],
+        errors: [{ msg: error.message || "Network error occurred", success: false }],
       };
     }
   }

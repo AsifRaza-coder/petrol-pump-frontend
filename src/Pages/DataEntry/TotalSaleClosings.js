@@ -201,32 +201,11 @@ const TotalSaleClosings = () => {
     printWindow.document.close();
 
     try {
-      // Show loading state
-      const loadingInterval = setInterval(() => {
-        if (printWindow.closed) {
-          clearInterval(loadingInterval);
-          return;
-        }
-        const dots = printWindow.document.querySelector('.dots') || printWindow.document.createElement('span');
-        dots.className = 'dots';
-        dots.textContent = '.'.repeat((Math.floor(Date.now() / 500) % 4));
-        if (!printWindow.document.querySelector('.dots')) {
-          const message = printWindow.document.querySelector('.message p');
-          if (message) {
-            message.appendChild(dots);
-          }
-        }
-      }, 500);
-
       const response = await dispatch(getPrintClosingReport(id)).unwrap();
-      clearInterval(loadingInterval);
       console.log("Print response:", response);
       
       if (response?.success && response?.url) {
-        // Add a small delay to ensure PDF is ready
-        setTimeout(() => {
-          printWindow.location.href = `${DOMAIN}${response.url}`;
-        }, 500);
+        printWindow.location.href = `${DOMAIN}${response.url}`;
       } else {
         // Handle error response
         const errorMsg = 
@@ -235,12 +214,9 @@ const TotalSaleClosings = () => {
           "Unable to generate report. Please try again later.";
         
         printWindow.document.body.innerHTML = `
-          <div style='font-family: Arial, sans-serif; text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #fef2f2, #fee2e2);'>
-            <div style='background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 500px; margin: 0 auto;'>
-              <p style='color: #dc2626; font-size: 18px; font-weight: bold; margin-bottom: 12px;'>Unable to generate report</p>
-              <p style='color: #666; font-size: 14px; margin-bottom: 20px;'>${errorMsg}</p>
-              <button onclick='window.close()' style='padding: 10px 20px; background: #dc2626; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;'>Close</button>
-            </div>
+          <div style='font-family: Arial, sans-serif; text-align: center; padding: 20px;'>
+            <p style='color: #dc2626; font-size: 16px; margin-bottom: 10px;'>Unable to generate report</p>
+            <p style='color: #666; font-size: 14px;'>${errorMsg}</p>
           </div>
         `;
         toast(errorMsg, { position: "top-right", type: "error" });
