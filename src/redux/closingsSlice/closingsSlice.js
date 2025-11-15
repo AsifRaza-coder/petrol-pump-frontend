@@ -291,11 +291,13 @@ export const closingSlice = createSlice({
       //Check for request success
       if (action.payload.success === true) {
         //Set Alert
-        toast(action.payload.msg, { position: "top-right", type: "error" });
+        toast(action.payload.msg, { position: "top-right", type: "success" });
+        // Use id from payload, or fallback to meta.arg (the ID passed to thunk)
+        const deletedId = action.payload.id || action.meta.arg;
         return {
           ...state,
-          data: [...state.data.filter((item) => item.id !== action.payload.id)],
-          totalRecord: action.payload.totalRecords,
+          data: [...state.data.filter((item) => item.id !== deletedId && item._id !== deletedId)],
+          totalRecord: action.payload.totalRecords || state.totalRecord - 1,
         };
       }
     });

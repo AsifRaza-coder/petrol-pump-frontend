@@ -7,11 +7,29 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 // Format date function
 const formatDate = (dateString) => {
   if (!dateString) return "";
+  
+  // If date is already in dd-mm-yyyy or dd/mm/yyyy format, parse it manually
+  if (typeof dateString === 'string' && (dateString.includes('-') || dateString.includes('/'))) {
+    const parts = dateString.split(/[-/]/);
+    if (parts.length === 3) {
+      // Assume format is dd-mm-yyyy or dd/mm/yyyy (day first)
+      const day = parts[0].padStart(2, "0");
+      const month = parts[1].padStart(2, "0");
+      const year = parts[2].slice(-2); // Last 2 digits
+      return `${day}-${month}-${year}`;
+    }
+  }
+  
+  // Fallback: try to parse as Date object
   const date = new Date(dateString);
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
-  return `${day}-${month}-${year}`;
+  if (!isNaN(date.getTime())) {
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = String(date.getFullYear()).slice(-2);
+    return `${day}-${month}-${year}`;
+  }
+  
+  return dateString; // Return as-is if can't parse
 };
 
 //Export sales Columns

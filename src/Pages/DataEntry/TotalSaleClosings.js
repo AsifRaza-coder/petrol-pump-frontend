@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import Header from "../../Components/Header/Header";
 import DataTable from "../../Components/datatable/DataTable";
 import { useDispatch, useSelector } from "react-redux";
@@ -41,6 +41,8 @@ const TotalSaleClosings = () => {
   const totalRecords = useSelector((state) => state.closings.totalRecord);
   //Initializing UseSelector to get errors
   const submitErrors = useSelector((state) => state.sales.errors);
+  //Track delete success to trigger reload
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
   //Use State for Handle Open and close of form dialog
   const [openFormDialog] = useState(false);
   // const [openFormDialog, setOpenFormDialog] = useState(false);
@@ -142,12 +144,71 @@ const TotalSaleClosings = () => {
     // }
   }, [submitErrors]);
 
+  //Function to reload current page data after delete
+  const reloadCurrentPage = useCallback(() => {
+    const { startDate, endDate, searchInput } = search;
+    const { field, operator, sort } = filters;
+    
+    //Organizing data from filters and search Input
+    let reloadState = {
+      field: field === "" ? "" : field,
+      operator: operator,
+      sort: sort,
+      page: currentPage,
+      searchInput: searchInput,
+      startDate: endDate !== "" && startDate === "" ? endDate : startDate,
+      endDate: endDate === "" && startDate !== "" ? startDate : endDate,
+    };
+
+    //Reload data with current filters
+    if (field === "date") {
+      if (startDate !== "" || endDate !== "") {
+        dispatch(getSaleClosings(reloadState));
+      } else {
+        //If no date filter, reload with default
+        dispatch(getSaleClosings({ page: currentPage, sort: sort }));
+      }
+    } else if (field === "") {
+      dispatch(getSaleClosings(reloadState));
+    } else {
+      if (field !== "" && searchInput !== "") {
+        dispatch(getSaleClosings(reloadState));
+      } else {
+        //If no search input, reload with default
+        dispatch(getSaleClosings({ page: currentPage, sort: sort }));
+      }
+    }
+  }, [search, filters, currentPage, dispatch]);
+
+  //useEffect to reload page after successful delete
+  useEffect(() => {
+    if (deleteSuccess) {
+      //Small delay to ensure state is updated
+      setTimeout(() => {
+        reloadCurrentPage();
+        setDeleteSuccess(false);
+      }, 100);
+    }
+  }, [deleteSuccess, reloadCurrentPage]);
+
   //Handle Delete Sale func
-  const handleOnDelete = () => {
-    //Calling delete function
-    dispatch(deleteClosing(selectedRowId));
-    //after delete clear row id
-    setSelectedRowId(null);
+  const handleOnDelete = async () => {
+    //Calling delete function - selectedRowId is an array, so use first element
+    const idToDelete = Array.isArray(selectedRowId) ? selectedRowId[0] : selectedRowId;
+    try {
+      const result = await dispatch(deleteClosing(idToDelete)).unwrap();
+      //after delete clear row id
+      setSelectedRowId(null);
+      //Close delete dialog
+      setOpenDeleteDialog(false);
+      //Trigger reload if delete was successful
+      if (result.success) {
+        setDeleteSuccess(true);
+      }
+    } catch (error) {
+      //Handle error if needed
+      console.error("Delete error:", error);
+    }
   };
 
   //Handle Print Sale func
