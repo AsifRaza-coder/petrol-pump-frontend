@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Header from "../../Components/Header/Header";
 import DataTable from "../../Components/datatable/DataTable";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,7 +13,7 @@ import {
 import Search from "../../Components/search/Search";
 import { toast } from "react-toastify";
 import { machineColumns } from "../../Components/datatable/machineTableSources";
-import { addMachine, clearCurrentMachine, clearMachines, deleteMachine, getMachines, getSingleMachine, updateMachine } from "../../redux/machineSlice/machineSlice";
+import { addMachine, clearCurrentMachine, clearMachines, deleteMachine, getMachines, getSingleMachine, unlockMachine, updateMachine } from "../../redux/machineSlice/machineSlice";
 import { machineInputFields, searchMachineFilters } from "../../Components/sources/machinesFormSources";
 import { searchInput } from "../../Components/sources/formSources";
 
@@ -36,6 +36,7 @@ const Machine = () => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   //Use State for selected row item id
   const [selectedRowId, setSelectedRowId] = useState(null);
+  const [deleteMachineId, setDeleteMachineId] = useState(null);
   //Use State for manage pages
   const [currentPage, setCurrentPage] = useState(0);
   //Setup use state for search filters
@@ -59,9 +60,17 @@ const Machine = () => {
   
   //Use State for manage filters panel
   const [openFiltersPanel, setOpenFiltersPanel] = useState(false);
+  useEffect(() => {
+    if (!openDeleteDialog) {
+      setDeleteMachineId(null);
+    }
+  }, [openDeleteDialog]);
   //Use Effect to get Single Customer API Hit
   useEffect(() => {
-    if ((selectedRowId !== undefined && openFormDialog === true) || (selectedRowId !== undefined && openDetailsDialog === true) ) {
+    if (
+      selectedRowId !== null &&
+      (openFormDialog === true || openDetailsDialog === true)
+    ) {
       //Dispatch current supplier
       dispatch(getSingleMachine(selectedRowId));
     }
@@ -95,6 +104,19 @@ const Machine = () => {
     //eslint-disable-next-line
   }, []);
 
+  const handleOnFormDialogClose = useCallback(() => {
+    setOpenFormDialog(false);
+    setSelectedRowId(null);
+    setState({
+      name: "",
+      type: "",
+      initialReading: "",
+      currentReading: "",
+      status: "",
+    });
+    dispatch(clearCurrentMachine());
+  }, [dispatch]);
+
   //useEffect to handle the dates filter
   useEffect(() => {
     if (filters.field === "date") {
@@ -106,7 +128,6 @@ const Machine = () => {
     }
     // eslint-disable-next-line
   }, [filters.field]);
-
 //useEffect to Iterate submit Errors
 useEffect(() => {
   if (submitErrors?.length > 0) {
@@ -117,14 +138,32 @@ useEffect(() => {
   } else {
     handleOnFormDialogClose();
   }
-}, [submitErrors]);
+}, [submitErrors, handleOnFormDialogClose]);
 
 //Handle Delete Machine func
-const handleOnDelete = () => {
-  //Calling delete function
-  dispatch(deleteMachine(selectedRowId));
-  //after delete clear row id
+const handleOnDelete = (id) => {
+  const machineId = id || deleteMachineId || selectedRowId;
+  if (machineId) {
+    dispatch(deleteMachine(machineId));
+  } else {
+    toast("No machine selected to delete", {
+      position: "top-right",
+      type: "error",
+    });
+  }
+  setDeleteMachineId(null);
   setSelectedRowId(null);
+};
+
+const handleUnlockMachine = (id) => {
+  if (id) {
+    dispatch(unlockMachine(id));
+  } else {
+    toast("Unable to unlock machine", {
+      position: "top-right",
+      type: "error",
+    });
+  }
 };
 
 //Load The Data
@@ -189,25 +228,6 @@ const handleOnSubmit = async (e) => {
     }
   }
 };
-
-  //Handle On Form Dialog Close
-  const handleOnFormDialogClose = () => {
-    //Close Form Dialog
-    setOpenFormDialog(false);
-    //Clear selected Row Id
-    setSelectedRowId(null);
-    //Clear State and remove previous data
-    setState({
-      name: "",
-      type: "",
-      initialReading: "",
-      currentReading: "",
-      status: ""
-    });
-
-    dispatch(clearCurrentMachine())
-  };
-
   //Handle on Page Change
   const handleOnPageChange = (e) => {
     //Setting pagination
@@ -283,7 +303,7 @@ const handleOnSubmit = async (e) => {
         
         if (selectedRowId !== null) {
           const data = {
-            id: selectedRowId[0],
+            id: selectedRowId,
             Data: state,
           };
           //Hit API Call using dispatch to updated machine
@@ -332,6 +352,7 @@ const handleOnSubmit = async (e) => {
           openDeleteDialog={openDeleteDialog}
           setOpenDeleteDialog={setOpenDeleteDialog}
           handleOnDelete={handleOnDelete}
+          confirmData={deleteMachineId}
           heading={"DELETE MACHINE"}
           color="#ff0000"
           icon={<DangerousIcon style={{ marginRight: "10px" }} />}
@@ -359,7 +380,10 @@ const handleOnSubmit = async (e) => {
           columns={machineColumns(
             setOpenDeleteDialog,
             setDetailsDialog,
-            setOpenFormDialog
+            setOpenFormDialog,
+            setSelectedRowId,
+            setDeleteMachineId,
+            handleUnlockMachine
           )}
           rows={capitalizedRows}
           currentPage={currentPage}

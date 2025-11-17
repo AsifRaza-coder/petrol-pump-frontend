@@ -72,6 +72,17 @@ export const getMachines = createAsyncThunk("getMachines", async (initData) => {
     }
   });
 
+//UNLOCK MACHINE AXIOS CALL USING ASYNC THUNK
+export const unlockMachine = createAsyncThunk("unlockMachine", async (id) => {
+  try {
+    return await axios
+      .patch(`${ENDPOINTS.MACHINE}/${id}/unlock`)
+      .then((res) => res.data);
+  } catch (error) {
+    return error.response?.data ?? { errors: [{ msg: "Unknown error", success: false }] };
+  }
+});
+
 
 //Creating the machine slice 
 export const machineSlice = createSlice({
@@ -234,6 +245,38 @@ export const machineSlice = createSlice({
               (item) => item.id !== action.payload.id
             )],
             totalRecord: action.payload.totalRecords,
+          };
+        }
+      });
+
+      //@CaseNo       06
+      //@Request      PATCH
+      //@Status       Success
+      //@used for     Unlock Machine
+      builder.addCase(unlockMachine.fulfilled, (state, action) => {
+        if (action.payload?.errors?.length > 0) {
+          return {
+            ...state,
+            errors: action.payload.errors,
+          };
+        }
+        if (action.payload?.success === true) {
+          const unlockedMachine = {
+            ...action.payload.machine,
+            id: action.payload.machine._id,
+          };
+          toast(action.payload.msg, {
+            position: "top-right",
+            type: "success",
+          });
+          return {
+            ...state,
+            data: state.data.map((item) =>
+              item.id === unlockedMachine.id
+                ? { ...item, lockStatus: unlockedMachine.lockStatus }
+                : item
+            ),
+            errors: [],
           };
         }
       });

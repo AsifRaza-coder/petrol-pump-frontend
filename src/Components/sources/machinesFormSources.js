@@ -3,7 +3,7 @@ export const machineInputFields = (selectedRowId, currentData) => [
     {
       id: 1,
       label: "Machine Name",
-       disabled: Object.entries(currentData).length > 0  ? true : false,
+       disabled: false,
       type: "text",
       name: "name",
       grid: {
@@ -17,7 +17,7 @@ export const machineInputFields = (selectedRowId, currentData) => [
       id: 2,
       label: "Fuel Type",
       type: "select",
-      disabled: Object.entries(currentData).length > 0 ? true : false,
+      disabled: false,
       name: "type",
       options: [
         // Here we are setup the filter operator items 
@@ -34,7 +34,7 @@ export const machineInputFields = (selectedRowId, currentData) => [
     {
       id: 3,
       label: "Initial Reading",
-       disabled: Object.entries(currentData).length > 0  ? true : false,
+       disabled: false,
       type: "number",
       name: "initialReading",
       grid: {
@@ -48,7 +48,7 @@ export const machineInputFields = (selectedRowId, currentData) => [
       id: 4,
       label: "Current Reading",
       type: "number",
-       disabled: Object.entries(currentData).length > 0  ? true : false,
+       disabled: false,
       name: "currentReading",
       grid: {
         xs: 12,

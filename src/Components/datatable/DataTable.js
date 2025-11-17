@@ -2,7 +2,16 @@ import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Stack } from "@mui/material";
 
-const DataTable = ({ columns, footer, rows, totalRecords,selectedRowId, handleOnPageChange, currentPage, setSelectedRowId  }) => {
+const DataTable = ({
+  columns,
+  footer,
+  rows,
+  totalRecords,
+  selectedRowId,
+  handleOnPageChange,
+  currentPage,
+  setSelectedRowId,
+}) => {
  
 return (
 <div className="h-[415px] p-5 m-0 bg-transparent rounded-lg [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-track]:bg-gray-200 [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar]:!h-2 hover:[&::-webkit-scrollbar-thumb]:!h-2 transition-all">
@@ -55,8 +64,10 @@ return (
             Pagination: footer ? () => null  : undefined , // Hides the pagination component
           }}
         page={currentPage}
-        onSelectionModelChange={(item) => setSelectedRowId(item)}
-        selectionModel={selectedRowId || []}
+        onSelectionModelChange={(item) =>
+          setSelectedRowId(item.length > 0 ? item[0] : null)
+        }
+        selectionModel={selectedRowId ? [selectedRowId] : []}
         onPageChange={(e)=> {handleOnPageChange(e)}}
         rowsPerPageOptions={[5]}
         checkboxSelection={false} // Enable checkbox selection

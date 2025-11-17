@@ -17,11 +17,12 @@ const Dialogue = ({
   icon,
   color,
   message,
+  confirmData,
 }) => {
 
     //Create Handle on Delete
     const handleDelete = () => {
-        handleOnDelete()
+        handleOnDelete(confirmData)
         setOpenDeleteDialog(false)
     }
   return (

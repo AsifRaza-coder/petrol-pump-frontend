@@ -1,4 +1,4 @@
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete, Edit, Lock } from "@mui/icons-material";
 import { IconButton, Tooltip } from "@mui/material";
 
 // SAMPLE DATA FOR USERS
@@ -6,7 +6,10 @@ import { IconButton, Tooltip } from "@mui/material";
 export const machineColumns = (
   setOpenDeleteDialog,
   setDetailsDialog,
-  setOpenFormDialog
+  setOpenFormDialog,
+  setSelectedRowId,
+  setDeleteMachineId,
+  handleUnlockMachine
 ) => [
   // { field: "id", headerName: "ID", width: 70 },
   {
@@ -52,17 +55,31 @@ export const machineColumns = (
             <IconButton
               className="viewButton"
               onClick={() => {
+                setSelectedRowId(params.row.id);
                 setOpenFormDialog(true);
               }}
             >
               <Edit style={{ fontSize: "20px" }} />
             </IconButton>
           </Tooltip>
-          {params.row.lockStatus === "open" && (
+          {params.row.lockStatus === "locked" ? (
+            <Tooltip title="Unlock Machine">
+              <IconButton
+                className="viewButton"
+                onClick={() => handleUnlockMachine(params.row.id)}
+              >
+                <Lock style={{ fontSize: "20px" }} />
+              </IconButton>
+            </Tooltip>
+          ) : (
             <Tooltip title="Delete Machine">
               <IconButton
                 className="viewButton"
-                onClick={() => setOpenDeleteDialog(true)}
+                onClick={() => {
+                  setSelectedRowId(params.row.id);
+                  setDeleteMachineId(params.row.id);
+                  setOpenDeleteDialog(true);
+                }}
               >
                 <Delete style={{ fontSize: "20px" }} />
               </IconButton>
