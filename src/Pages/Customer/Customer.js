@@ -343,7 +343,7 @@ const Customer = () => {
    */
   const submitCustomerData = async (data) => {
     if (selectedRowId) {
-      dispatch(updateCustomer({ id: selectedRowId[0], Data: data }));
+      dispatch(updateCustomer({ id: selectedRowId, Data: data }));
     } else {
       dispatch(addCustomer(data));
     }
