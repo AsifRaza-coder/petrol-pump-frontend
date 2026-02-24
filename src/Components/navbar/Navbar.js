@@ -44,6 +44,8 @@ const Navbar = ({openSidebar,setOpenSidebar}) => {
           <Link to="/" className="no-underline">
             <h1 className="sm:text-2xl md:text-3xl lg:text-3xl font-bold text-white cursor-pointer hover:text-gray-200 transition-colors">Mudasar Filling Station</h1>
           </Link>
+          console.log(user) 
+          
         </div>
 
         {isAuthenticated ? (
